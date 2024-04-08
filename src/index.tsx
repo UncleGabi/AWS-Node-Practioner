@@ -15,9 +15,7 @@ const queryClient = new QueryClient({
   },
 });
 
-// if (import.meta.env.DEV) {
 worker.start({ onUnhandledRequest: "bypass" });
-// }
 
 const container = document.getElementById("app");
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion

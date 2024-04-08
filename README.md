@@ -69,3 +69,35 @@ Combination of `cloudfront:setup` and `cloudfront:build:deploy` commands with or
 ### `serverless:remove`
 
 Remove an entire stack configured in `serverless.yml` via CloudFormation.
+
+### `cdk:bootstrap`
+
+Prepares the environment for the AWS CDK deployment. It creates necessary resources like an S3 bucket to manage the deployment.
+
+### `cdk:synth`
+
+Synthesizes and prints the CloudFormation template for this CDK application. It's a way to see what resources will be created or modified before actually deploying the application.
+
+### `cdk:deploy`
+
+Deploys the AWS CDK app to your AWS account. It creates or updates the resources defined in your CDK app.
+
+### `cdk:destroy`
+
+Removes all resources that were created by the cdk:deploy command. It's a way to clean up the resources when you're done with the application.
+
+### `cloudfront:invalidate`
+
+Invalidates the CloudFront distribution cache. It's necessary to run this command when you update the contents of your S3 bucket, so that the latest contents are served through CloudFront. Don't forget to update the Distribution ID after having destroyed the application.
+
+### `build-and-deploy`
+
+First builds the application by running the build script, and then deploys the application by running the deploy script. It's a convenient way to build and deploy the application in one step.
+
+### S3-URL
+
+`http://mycdkappstack-frontendbucketefe2e19c-a5vwybpxp3jd.s3-website-us-east-1.amazonaws.com`
+
+### CloudFront URL
+
+`https://d61lr7r0zluxq.cloudfront.net`
