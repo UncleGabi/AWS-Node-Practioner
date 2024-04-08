@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "tsconfig-start": "ts-node -r tsconfig-paths/register src/index.ts",
     "start": "vite",
     "build": "tsc && vite build",
     "preview": "npm run build && vite preview",
@@ -22,7 +23,13 @@
     "cloudfront:build:deploy:nc": "npm run client:build:deploy:nc && npm run cloudfront:invalidateCache",
     "cloudfront:update:build:deploy": "npm run cloudfront:setup && npm run cloudfront:build:deploy",
     "cloudfront:update:build:deploy:nc": "npm run cloudfront:setup && npm run cloudfront:build:deploy:nc",
-    "serverless:remove": "sls remove"
+    "serverless:remove": "sls remove",
+    "cdk:bootstrap": "npm run cdk:bootstrap --prefix my-cdk-app",
+    "cdk:synth": "npm run cdk:synth --prefix my-cdk-app",
+    "cdk:deploy": "npm run cdk:deploy --prefix my-cdk-app",
+    "cdk:destroy": "npm run cdk:destroy --prefix my-cdk-app",
+    "cloudfront:invalidate": "npm run cloudfront:invalidate --prefix my-cdk-app",
+    "build-and-deploy": "npm run build && npm run deploy"
   },
   "dependencies": {
     "@emotion/react": "^11.9.3",
@@ -43,7 +50,7 @@
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
     "@testing-library/user-event": "^14.2.1",
-    "@types/react": "^18.2.74",
+    "@types/react": "^18.0.15",
     "@types/react-dom": "^18.0.6",
     "@typescript-eslint/eslint-plugin": "^5.30.5",
     "@typescript-eslint/parser": "^5.30.5",
