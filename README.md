@@ -81,6 +81,7 @@ Synthesizes and prints the CloudFormation template for this CDK application. It'
 ### `cdk:deploy`
 
 Deploys the AWS CDK app to your AWS account. It creates or updates the resources defined in your CDK app.
+After deploying, don't forget to update `cloudfront:invalidate` and `check-invalidate-status` endpoints
 
 ### `cdk:destroy`
 
@@ -96,7 +97,7 @@ First builds the application by running the build script, and then deploys the a
 
 ### S3-URL
 
-`http://mycdkappstack-frontendbucketefe2e19c-a5vwybpxp3jd.s3-website-us-east-1.amazonaws.com`
+`mycdkappstack-frontendbucketefe2e19c-a5vwybpxp3jd`
 
 ### CloudFront URL
 

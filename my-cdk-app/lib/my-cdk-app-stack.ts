@@ -26,6 +26,11 @@ export class MyCdkAppStack extends cdk.Stack {
         defaultRootObject: "index.html",
         errorResponses: [
           {
+            httpStatus: 403,
+            responseHttpStatus: 200,
+            responsePagePath: "/index.html",
+          },
+          {
             httpStatus: 404,
             responseHttpStatus: 200,
             responsePagePath: "/index.html",
