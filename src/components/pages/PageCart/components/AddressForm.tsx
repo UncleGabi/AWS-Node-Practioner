@@ -20,7 +20,12 @@ const AddressForm = ({ initialValues, onBack, onSubmit }: AddressFormProps) => {
       validateOnMount={true}
       onSubmit={onSubmit}
     >
-      <Form autoComplete="off">
+      <Form
+        autoComplete="off"
+        placeholder={undefined}
+        onPointerEnterCapture={undefined}
+        onPointerLeaveCapture={undefined}
+      >
         <Typography variant="h6" gutterBottom>
           Shipping address
         </Typography>

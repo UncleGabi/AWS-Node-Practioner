@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: "Product Service API"
+  description: "API for managing products"
+  termsOfService: http://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.0
+externalDocs:
+  description: Find out more about Swagger
+  url: http://swagger.io
+tags:
+  - name: products
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: http://swagger.io
+servers:
+  - url: https://zlnoyweipk.execute-api.us-east-1.amazonaws.com/prod
+paths:
+  /products:
+    get:
+      tags:
+        - "products"
+      summary: "Get the list of products"
+      responses:
+        "200":
+          description: "A list of products"
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: "#/components/schemas/Product"
+  /products/{productId}:
+    get:
+      tags:
+        - "products"
+      summary: "Get a product by ID"
+      parameters:
+        - in: "path"
+          name: "productId"
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "A product"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Product"
+        "404":
+          description: "Product not found with the given Product ID"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 404
+                  message:
+                    type: string
+                    example: Product not found
+components:
+  schemas:
+    Product:
+      type: "object"
+      properties:
+        id:
+          type: "string"
+        name:
+          type: "string"
+        description:
+          type: "string"
+        price:
+          type: "number"

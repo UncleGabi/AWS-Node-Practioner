@@ -53,7 +53,12 @@ export default function PageProductForm() {
           onSubmit={onSubmit}
         >
           {({ dirty, isSubmitting }: FormikProps<AvailableProduct>) => (
-            <Form autoComplete="off">
+            <Form
+              autoComplete="off"
+              placeholder={undefined}
+              onPointerEnterCapture={undefined}
+              onPointerLeaveCapture={undefined}
+            >
               <Grid container spacing={2}>
                 <Grid item xs={12}>
                   <Field
