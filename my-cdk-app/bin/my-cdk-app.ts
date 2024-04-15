@@ -3,8 +3,10 @@ import "source-map-support/register";
 import * as cdk from "aws-cdk-lib";
 import { HelloLambdaStack } from "../lib/hello-lambda-stack";
 import { SwaggerUIStack } from "../lib/swagger-stack";
+import { MyCdkAppStack } from "../lib/my-cdk-app";
 
 const app = new cdk.App();
+new MyCdkAppStack(app, "MyCdkAppStack");
 new SwaggerUIStack(app, "SwaggerUIStack");
 new HelloLambdaStack(app, "HelloLambdaStack", {
   /* If you don't specify 'env', this stack will be environment-agnostic.
