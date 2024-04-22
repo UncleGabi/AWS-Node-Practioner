@@ -53,7 +53,7 @@ export const handler: Handler = async (
   } catch (error) {
     console.log("Error:", error);
     throw new InternalServerError({
-      message: `Failed to save Product data to DynamoDB: ${error}`,
+      message: `Failed to save Products array from DynamoDB: ${error}`,
       $metadata: {
         requestId: event.requestContext.requestId,
       },
