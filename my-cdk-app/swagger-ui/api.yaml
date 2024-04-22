@@ -19,7 +19,7 @@ tags:
       description: Find out more
       url: http://swagger.io
 servers:
-  - url: https://zlnoyweipk.execute-api.us-east-1.amazonaws.com/prod
+  - url: https://q221f1l1g0.execute-api.us-east-1.amazonaws.com/prod
 paths:
   /products:
     get:
@@ -34,7 +34,37 @@ paths:
               schema:
                 type: "array"
                 items:
-                  $ref: "#/components/schemas/Product"
+                  $ref: "#/components/schemas/GetProductResponse"
+    post:
+      tags:
+        - "products"
+      summary: "Create a new product"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateProductRequest"
+      responses:
+        "201":
+          description: "Product created"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CreateProductResponse"
+        "400":
+          description: "Invalid input"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: number
+                    example: 400
+                  message:
+                    type: string
+                    example: Invalid input
   /products/{productId}:
     get:
       tags:
@@ -52,7 +82,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/Product"
+                $ref: "#/components/schemas/GetProductResponse"
         "404":
           description: "Product not found with the given Product ID"
           content:
@@ -68,14 +98,32 @@ paths:
                     example: Product not found
 components:
   schemas:
-    Product:
+    GetProductResponse:
       type: "object"
       properties:
         id:
           type: "string"
-        name:
+        title:
           type: "string"
         description:
           type: "string"
         price:
           type: "number"
+        count:
+          type: "number"
+    CreateProductRequest:
+      type: "object"
+      properties:
+        title:
+          type: "string"
+        description:
+          type: "string"
+        price:
+          type: "number"
+        count:
+          type: "number"
+    CreateProductResponse:
+      type: "object"
+      properties:
+        id:
+          type: "string"
