@@ -25,6 +25,7 @@
     "serverless:remove": "sls remove"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.556.0",
     "@emotion/react": "^11.9.3",
     "@emotion/styled": "^11.9.3",
     "@mui/icons-material": "^5.8.4",
@@ -33,6 +34,7 @@
     "@types/yup": "^0.29.14",
     "aws-lambda": "^1.0.7",
     "axios": "^0.27.2",
+    "dotenv": "^16.4.5",
     "formik": "^2.2.9",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

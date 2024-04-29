@@ -4,10 +4,12 @@ import * as cdk from "aws-cdk-lib";
 import { HelloLambdaStack } from "../lib/hello-lambda-stack";
 import { SwaggerUIStack } from "../lib/swagger-stack";
 import { MyCdkAppStack } from "../lib/my-cdk-app";
+import { ImportServiceStack } from "../lib/import-service-stack";
 
 const app = new cdk.App();
 new MyCdkAppStack(app, "MyCdkAppStack");
 new SwaggerUIStack(app, "SwaggerUIStack");
+new ImportServiceStack(app, "ImportServiceStack");
 new HelloLambdaStack(app, "HelloLambdaStack", {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,

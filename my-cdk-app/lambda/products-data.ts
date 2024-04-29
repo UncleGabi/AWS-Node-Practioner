@@ -1,4 +1,8 @@
-import { Product } from "./interfaces";
+import { Product, Stock } from "./interfaces";
+
+const generateRandomStockNumber = (): number => {
+  return Math.floor(Math.random() * 21);
+};
 
 export const products: Product[] = [
   {
@@ -38,3 +42,8 @@ export const products: Product[] = [
     price: 15,
   },
 ];
+
+export const stockData: Stock[] = products.map((product) => ({
+  product_id: product.id,
+  count: generateRandomStockNumber(),
+}));
