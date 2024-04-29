@@ -4,6 +4,7 @@ import {
   GetObjectCommand,
   CopyObjectCommand,
   DeleteObjectCommand,
+  ListObjectVersionsCommand,
 } from "@aws-sdk/client-s3";
 import csvParser from "csv-parser";
 import { Readable } from "stream";
@@ -54,9 +55,35 @@ export const handler: S3Handler = async (event: S3Event) => {
           console.error("Error copying object:", error);
         }
 
+        // Get the version ID of the object
+        const listObjectVersionsCommand = new ListObjectVersionsCommand({
+          Bucket: record.s3.bucket.name,
+          Prefix: record.s3.object.key,
+        });
+
+        const versionsResponse = await s3Client.send(listObjectVersionsCommand);
+
+        if (!versionsResponse.Versions) {
+          console.log("No versions found");
+        }
+
+        let versionId: string | undefined;
+
+        if (versionsResponse.Versions) {
+          versionId = versionsResponse.Versions.find(
+            (version) => version.IsLatest
+          )?.VersionId;
+        }
+
+        if (!versionId) {
+          console.error("Could not find the latest version of the object.");
+          return;
+        }
+
         const deleteObjectCommand = new DeleteObjectCommand({
           Bucket: record.s3.bucket.name,
           Key: record.s3.object.key,
+          VersionId: versionId,
         });
 
         console.log("Deleting object:", record.s3.object.key);
