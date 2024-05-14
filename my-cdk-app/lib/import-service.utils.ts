@@ -10,6 +10,19 @@ export function createImportBucket(scope: Construct) {
   return new s3.Bucket(scope, "ImportBucket", {
     versioned: true,
     removalPolicy: cdk.RemovalPolicy.DESTROY,
+    cors: [
+      {
+        allowedMethods: [
+          s3.HttpMethods.GET,
+          s3.HttpMethods.PUT,
+          s3.HttpMethods.POST,
+          s3.HttpMethods.DELETE,
+          s3.HttpMethods.HEAD,
+        ],
+        allowedOrigins: ["*"],
+        allowedHeaders: ["*"],
+      },
+    ],
   });
 }
 

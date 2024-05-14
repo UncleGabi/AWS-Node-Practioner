@@ -32,20 +32,10 @@ export class ImportServiceStack extends cdk.Stack {
     const api = createApiGateway(this);
 
     addImportResource(api, importProductsFileLambda);
-
-    // const importFileParserLambda = createLambdaFunction(
-    //   this,
-    //   importBucket,
-    //   "importFileParser",
-    //   "importFileParser"
-    // );
-
-    // addS3EventSource(importFileParserLambda, importBucket);
+    importBucket.grantReadWrite(importProductsFileLambda);
 
     // Create a SQS Queue.
     const catalogItemsQueue = new sqs.Queue(this, "catalogItemsQueue");
-
-    // catalogItemsQueue.grantSendMessages(importFileParserLambda);
 
     // Create a SNS Topic.
     const createProductTopic = new sns.Topic(this, "createProductTopic", {
@@ -53,7 +43,7 @@ export class ImportServiceStack extends cdk.Stack {
     });
 
     const emailSubscription = new snsSubscriptions.EmailSubscription(
-      "uncle.gabi92@epam.com"
+      "uncle.gabi@epam.com"
     );
 
     createProductTopic.addSubscription(emailSubscription);
@@ -80,7 +70,13 @@ export class ImportServiceStack extends cdk.Stack {
       "ProductsTable",
       "Products"
     );
+    const stockTable = dynamoDB.Table.fromTableName(
+      this,
+      "StockTable",
+      "Stock"
+    );
     productsTable.grantWriteData(catalogBatchProcessLambdaFunction);
+    stockTable.grantWriteData(catalogBatchProcessLambdaFunction);
 
     catalogBatchProcessLambdaFunction.addEventSource(
       new SqsEventSource(catalogItemsQueue, { batchSize: 5 })
@@ -97,6 +93,8 @@ export class ImportServiceStack extends cdk.Stack {
         },
       }
     );
+    importBucket.grantReadWrite(importFileParserLambda);
+    addS3EventSource(importFileParserLambda, importBucket);
 
     const sqsSendMessagePolicyStatement = new PolicyStatement({
       effect: Effect.ALLOW,
@@ -104,9 +102,5 @@ export class ImportServiceStack extends cdk.Stack {
       actions: ["sqs:SendMessage"],
     });
     importFileParserLambda.addToRolePolicy(sqsSendMessagePolicyStatement);
-
-    importBucket.grantReadWrite(importFileParserLambda);
-
-    addS3EventSource(importFileParserLambda, importBucket);
   }
 }
