@@ -30,10 +30,18 @@ export default function CSVFileImport({ url, title }: CSVFileImportProps) {
       throw new Error("The given file is not found");
     }
 
+    const username = "UncleGabi";
+    const password = import.meta.env.VITE_PASSWORD;
+    const authorizationToken = btoa(`${username}:${password}`);
+    console.log("authorizationToken ", authorizationToken);
+
     // Get the presigned URL
     const response = await axios({
       method: "GET",
       url,
+      // headers: {
+      //   Authorization: `Basic ${authorizationToken}`,
+      // },
       params: {
         name: encodeURIComponent(file.name),
       },

@@ -5,6 +5,8 @@ import * as sns from "aws-cdk-lib/aws-sns";
 import * as snsSubscriptions from "aws-cdk-lib/aws-sns-subscriptions";
 import * as lambda from "aws-cdk-lib/aws-lambda-nodejs";
 import * as dynamoDB from "aws-cdk-lib/aws-dynamodb";
+import * as apigateway from "aws-cdk-lib/aws-apigateway";
+import * as iam from "aws-cdk-lib/aws-iam";
 import * as path from "path";
 import {
   createImportBucket,
@@ -15,6 +17,9 @@ import {
 } from "./import-service.utils";
 import { SqsEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
 import { Effect, PolicyStatement } from "aws-cdk-lib/aws-iam";
+import * as dotenv from "dotenv";
+
+dotenv.config();
 
 export class ImportServiceStack extends cdk.Stack {
   constructor(scope: Construct, id: string, props?: cdk.StackProps) {
@@ -29,9 +34,42 @@ export class ImportServiceStack extends cdk.Stack {
       "importProductsFile"
     );
 
+    const gitPassword = process.env.UncleGabi;
+
+    if (!gitPassword) {
+      throw new Error("UncleGabi is not defined");
+    }
+
+    const basicAuthorizerLambda = new lambda.NodejsFunction(
+      this,
+      "basicAuthorizerLambda",
+      {
+        handler: "handler",
+        entry: path.join(__dirname, `../lambda/basicAuthorizer.ts`),
+        environment: {
+          UncleGabi: gitPassword,
+        },
+      }
+    );
+
     const api = createApiGateway(this);
 
-    addImportResource(api, importProductsFileLambda);
+    const basicAuthorizer = new apigateway.TokenAuthorizer(
+      this,
+      "basicAuthorizer",
+      {
+        handler: basicAuthorizerLambda,
+        identitySource: "method.request.header.Authorization",
+      }
+    );
+
+    basicAuthorizerLambda.addPermission("APIGatewayInvokePermission", {
+      action: "lambda:InvokeFunction",
+      principal: new iam.ServicePrincipal("apigateway.amazonaws.com"),
+      sourceArn: api.arnForExecuteApi(),
+    });
+
+    addImportResource(api, importProductsFileLambda, basicAuthorizer);
     importBucket.grantReadWrite(importProductsFileLambda);
 
     // Create a SQS Queue.
