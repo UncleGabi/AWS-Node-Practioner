@@ -54,11 +54,15 @@ export function createApiGateway(scope: Construct) {
 
 export function addImportResource(
   api: apigateway.RestApi,
-  lambdaFunction: lambda.NodejsFunction
+  lambdaFunction: lambda.NodejsFunction,
+  authorizer: cdk.aws_apigateway.TokenAuthorizer
 ) {
   const importResource = api.root.addResource("import");
   const importIntegration = new apigateway.LambdaIntegration(lambdaFunction);
-  importResource.addMethod("GET", importIntegration);
+  importResource.addMethod("GET", importIntegration, {
+    authorizationType: apigateway.AuthorizationType.CUSTOM,
+    authorizer,
+  });
   importResource.addCorsPreflight({
     allowOrigins: apigateway.Cors.ALL_ORIGINS,
     allowMethods: apigateway.Cors.ALL_METHODS,
