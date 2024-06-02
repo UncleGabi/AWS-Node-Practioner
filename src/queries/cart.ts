@@ -29,11 +29,43 @@ export function useInvalidateCart() {
 }
 
 export function useUpsertCart() {
-  return useMutation((values: CartItem) =>
-    axios.put<CartItem[]>(`${API_PATHS.cart}/profile/cart`, values, {
-      headers: {
-        Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+  const queryClient = useQueryClient();
+
+  return useMutation(
+    (values: CartItem) => {
+      console.log("values", values);
+      return axios.put<CartItem[]>(`${API_PATHS.cart}/profile/cart`, values, {
+        headers: {
+          Authorization: `Basic ${localStorage.getItem("authorization_token")}`,
+        },
+      });
+    },
+    {
+      onMutate: async (newItem: CartItem) => {
+        await queryClient.cancelQueries("cart");
+
+        const previousCart = queryClient.getQueryData<CartItem[]>("cart");
+
+        queryClient.setQueryData<CartItem[]>("cart", (oldCart) => {
+          if (!oldCart) return [newItem];
+
+          const existingItemIndex = oldCart.findIndex(
+            (item) => item.product.id === newItem.product.id
+          );
+          if (existingItemIndex !== -1) {
+            const updatedCart = [...oldCart];
+            updatedCart[existingItemIndex] = {
+              ...oldCart[existingItemIndex],
+              count: newItem.count,
+            };
+            return updatedCart;
+          }
+
+          return [...oldCart, newItem];
+        });
+
+        return { previousCart };
       },
-    })
+    }
   );
 }
